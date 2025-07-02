@@ -29,7 +29,7 @@ export default async function UserDashboardPage() {
 
   // Mengirim data lowongan ke client-side component
   return (
-    <div className="p-6 bg-background text-foreground">
+    <div className="p-6 bg-background text-foreground mt-20 md:mt-0">
       <h1 className="text-2xl font-bold mb-4">Dashboard Pengguna</h1>
       <UserDashboardClientPage lowongan={lowongan} />
     </div>

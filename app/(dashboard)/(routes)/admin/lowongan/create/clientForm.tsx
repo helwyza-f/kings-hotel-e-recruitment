@@ -26,7 +26,6 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { convertDateToLocalISOString } from "@/lib/utils/convertDateToLocalISOString"; // ✅ Import helper
 
 const ReactQuill = dynamic(() => import("react-quill-new"), {
   ssr: false,
@@ -60,7 +59,7 @@ const ClientForm = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { isSubmitting, isValid },
     setValue,
   } = form;
 

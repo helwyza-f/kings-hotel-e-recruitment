@@ -55,6 +55,7 @@ export default function UploadSuratPengalamanForm() {
 
   const handleSimpan = async () => {
     if (!preview) return;
+    setLoading(true);
     const supabase = createClient();
     const { data: userData } = await supabase.auth.getUser();
     const user_id = userData.user?.id;
@@ -74,6 +75,7 @@ export default function UploadSuratPengalamanForm() {
       console.error(error);
       toast.error("Gagal menyimpan ke database.");
     } else {
+      setLoading(false);
       toast.success("Data pengalaman berhasil disimpan!");
       router.push("/user/profile/pengalaman");
     }

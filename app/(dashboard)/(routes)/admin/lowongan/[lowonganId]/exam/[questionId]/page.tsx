@@ -40,7 +40,7 @@ export default async function EditQuestionPage({
       <ExamEditClientPage
         question={question}
         lowonganId={lowonganId}
-        questionId={questionId} // Pass the questionId to the client-side component
+        // Pass the questionId to the client-side component
       />
     </div>
   );

@@ -45,6 +45,7 @@ export default function NavbarRoutes() {
           console.error("Error fetching user role:", profileError.message);
         } else {
           setRole(profileData?.role);
+          console.log(role);
         }
 
         // Check if the email is pending confirmation
@@ -69,7 +70,7 @@ export default function NavbarRoutes() {
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, []);
+  }, [supabase, role]);
 
   if (loading) {
     return <div>Loading...</div>;

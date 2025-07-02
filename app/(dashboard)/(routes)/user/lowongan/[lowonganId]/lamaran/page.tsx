@@ -44,7 +44,7 @@ export default async function LamaranPage({
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 mt-20 md:mt-0 bg-background text-foreground">
       <h1 className="text-2xl font-bold mb-4">
         Lamar Pekerjaan: {lowongan.posisi}
       </h1>

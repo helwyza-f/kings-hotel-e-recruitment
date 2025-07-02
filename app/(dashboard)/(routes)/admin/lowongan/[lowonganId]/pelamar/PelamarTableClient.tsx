@@ -39,7 +39,7 @@ interface Pelamar {
 export default function PelamarCardList({ pelamars }: { pelamars: Pelamar[] }) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const [isPending, startTransition] = useTransition();
-
+  console.log(isPending);
   const handleUpdateStatus = async (id: string, newStatus: string) => {
     startTransition(async () => {
       const res = await fetch(`/api/admin/lamaran/${id}/update-status`, {

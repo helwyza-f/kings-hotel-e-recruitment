@@ -67,7 +67,7 @@ const ClientFormEdit = ({ lowongan }: ClientFormEditProps) => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { isSubmitting, isValid },
     setValue,
   } = form;
 

@@ -29,14 +29,14 @@ interface ExamEditClientPageProps {
     correct_answer: string;
   };
   lowonganId: string;
-  questionId: string;
+  // questionId: string;
 }
 
 export default function ExamEditClientPage({
   question,
   lowonganId,
-  questionId,
-}: ExamEditClientPageProps) {
+}: // questionId,
+ExamEditClientPageProps) {
   const router = useRouter();
   const choices = Array.isArray(question.choices)
     ? question.choices
@@ -55,7 +55,7 @@ export default function ExamEditClientPage({
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
     setValue,
-    getValues,
+
     watch,
   } = form;
 

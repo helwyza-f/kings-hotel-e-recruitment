@@ -12,7 +12,7 @@ export default async function ExamPage({
 
   const supabase = await createClient();
   //Fecth lowongan based on the lowonganId
-  const { data: lowongan, error: lowonganError } = await supabase
+  const { data: lowongan } = await supabase
     .from("lowongan")
     .select("*")
     .eq("id", lowonganId)

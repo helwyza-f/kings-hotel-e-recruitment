@@ -1,8 +1,7 @@
 import { createClient } from "@/lib/supabase/server"; // For Supabase client
 import { redirect } from "next/navigation";
-import { Button } from "@/components/ui/button";
+
 import LowonganClientPage from "./LowonganClientPage"; // Client-side component
-import Link from "next/link"; // For navigation
 
 export default async function LowonganPage() {
   const supabase = await createClient();
@@ -19,7 +18,7 @@ export default async function LowonganPage() {
   }
 
   return (
-    <div className="p-6 bg-background text-foreground">
+    <div className="p-6 bg-background text-foreground mt-20 md:mt-0">
       {/* Pass lowongan data to the client-side component */}
       <LowonganClientPage lowongan={lowongan} />
     </div>

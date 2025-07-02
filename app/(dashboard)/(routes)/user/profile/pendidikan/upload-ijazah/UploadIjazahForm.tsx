@@ -9,6 +9,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { fileToBase64 } from "@/lib/utils/base64";
+// import { set } from "date-fns";
 
 type PendidikanAI = {
   institusi: string;
@@ -52,6 +53,7 @@ export default function UploadIjazahForm() {
 
   const handleSimpan = async () => {
     if (!preview) return;
+    setLoading(true);
     const supabase = createClient();
     const { data: userData } = await supabase.auth.getUser();
     const user_id = userData.user?.id;
@@ -73,6 +75,7 @@ export default function UploadIjazahForm() {
       console.error(error);
       toast.error("Gagal menyimpan ke database.");
     } else {
+      setLoading(false);
       toast.success("Data berhasil disimpan!");
       router.push("/user/profile/pendidikan");
     }

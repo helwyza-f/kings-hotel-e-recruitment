@@ -4,7 +4,7 @@ import { hasEnvVars } from "../utils";
 
 export async function updateSession(request: NextRequest) {
   // Initialize the response and handle cookies
-  let response = NextResponse.next();
+  const response = NextResponse.next();
 
   // If environment variables are not set, skip middleware check
   if (!hasEnvVars) {

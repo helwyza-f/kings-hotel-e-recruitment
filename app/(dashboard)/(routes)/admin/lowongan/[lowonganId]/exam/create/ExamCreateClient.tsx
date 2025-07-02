@@ -44,9 +44,9 @@ export default function ExamCreateClient({
   const router = useRouter();
   const {
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
     setValue,
-    getValues,
+
     watch,
   } = form;
 

@@ -4,10 +4,10 @@ import React from "react";
 export default function Logo() {
   return (
     <Image
-      src="/img/logo.png"
+      src="/img/logo2.png"
       alt="logo"
-      width={80}
-      height={80}
+      width={100}
+      height={100}
       priority={true}
     />
   );

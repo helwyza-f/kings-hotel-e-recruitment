@@ -16,7 +16,7 @@ export default function ExamClientPage({
   lowonganId: string;
 }) {
   const [questions, setQuestions] = useState<any[]>([]);
-
+  console.log(exams);
   useEffect(() => {
     // Convert the jsonb `choices` into a proper array and set it to state
     const updatedQuestions = examQuestions.map((question) => {

@@ -28,14 +28,13 @@ export async function PUT(req: Request) {
       throw profileError;
     }
 
-    const { data: updatedUser, error: emailError } =
-      await supabaseClient.auth.updateUser({
-        email: email,
-        data: {
-          first_name,
-          last_name,
-        },
-      });
+    const { error: emailError } = await supabaseClient.auth.updateUser({
+      email: email,
+      data: {
+        first_name,
+        last_name,
+      },
+    });
 
     if (emailError) {
       throw emailError;

@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
+// import { useState } from "react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { format } from "date-fns";
@@ -83,10 +83,8 @@ export default function UserProfileClientPage({
 
   const {
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { isSubmitting, isValid },
     control,
-    register,
-    watch,
   } = form;
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
