@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { set } from "date-fns";
 
 interface ExamQuestion {
   id: string;
@@ -56,18 +57,22 @@ export default function ExamClientPage({
       const result = await res.json();
 
       if (res.ok) {
+        setLoading(false);
         toast.success("Ujian berhasil dikirim!");
         router.push("/user/profile/lamaran-saya");
       } else {
         if (result.error?.includes("pendidikan")) {
+          setLoading(false);
           toast.error(
             "Anda belum mengisi data pendidikan. Silakan lengkapi dulu."
           );
         } else if (result.error?.includes("pengalaman kerja")) {
+          setLoading(false);
           toast.error(
             "Anda belum mengisi data pengalaman kerja. Silakan lengkapi dulu."
           );
         } else {
+          setLoading(false);
           toast.error("Gagal memeriksa jawaban.");
         }
         console.error(result.error);
