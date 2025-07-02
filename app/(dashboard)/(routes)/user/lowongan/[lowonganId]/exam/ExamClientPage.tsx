@@ -49,23 +49,32 @@ export default function ExamClientPage({
           answers,
           examId: exam.id,
           userId,
-          lowonganId: exam.lowongan_id, // 👈 ini ditambahkan
+          lowonganId: exam.lowongan_id,
         }),
       });
 
+      const result = await res.json();
+
       if (res.ok) {
         toast.success("Ujian berhasil dikirim!");
-        router.push("/user/profile/lamaran-saya"); // 👈 redirect otomatis
+        router.push("/user/profile/lamaran-saya");
       } else {
-        const result = await res.json();
+        if (result.error?.includes("pendidikan")) {
+          toast.error(
+            "Anda belum mengisi data pendidikan. Silakan lengkapi dulu."
+          );
+        } else if (result.error?.includes("pengalaman kerja")) {
+          toast.error(
+            "Anda belum mengisi data pengalaman kerja. Silakan lengkapi dulu."
+          );
+        } else {
+          toast.error("Gagal memeriksa jawaban.");
+        }
         console.error(result.error);
-        toast.error("Gagal memeriksa jawaban.");
       }
     } catch (error) {
       console.error("Error submitting exam:", error);
       toast.error("Terjadi kesalahan saat mengirim.");
-    } finally {
-      setLoading(false);
     }
   };
 

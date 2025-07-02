@@ -30,13 +30,20 @@ export async function POST(req: Request) {
   const total = correctQuestions.length;
   const score = Math.round((correct / total) * 100);
 
-  // 3. Ambil kualifikasi pendidikan user
+  // / 3. Ambil kualifikasi pendidikan user
   const { data: pendidikanList } = await supabase
     .from("pendidikan")
     .select("kualifikasi")
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
     .limit(1);
+
+  if (!pendidikanList || pendidikanList.length === 0) {
+    return NextResponse.json(
+      { error: "Data pendidikan tidak ditemukan" },
+      { status: 400 }
+    );
+  }
 
   const kualifikasi = pendidikanList?.[0]?.kualifikasi ?? "SMA";
   const kualifikasiMap: Record<string, number> = {
@@ -54,7 +61,12 @@ export async function POST(req: Request) {
     .from("pengalaman_kerja")
     .select("periode")
     .eq("user_id", userId);
-
+  if (!pengalamanList || pengalamanList.length === 0) {
+    return NextResponse.json(
+      { error: "Data pengalaman kerja tidak ditemukan" },
+      { status: 400 }
+    );
+  }
   const tahunList = (pengalamanList ?? [])
     .map((p) => {
       const [start, end] = p.periode?.split(" - ").map(Number) ?? [];
