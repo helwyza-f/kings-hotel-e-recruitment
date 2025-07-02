@@ -69,15 +69,18 @@ export async function POST(req: Request) {
       : 0;
 
   // 5. Kirim ke Flask API
-  const flaskRes = await fetch("http://localhost:5000/api/predict", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      pendidikan: pendidikanValue,
-      pengalaman_kerja: pengalamanKerja,
-      skor_psikotes: score,
-    }),
-  });
+  const flaskRes = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/predict`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        pendidikan: pendidikanValue,
+        pengalaman_kerja: pengalamanKerja,
+        skor_psikotes: score,
+      }),
+    }
+  );
 
   if (!flaskRes.ok) {
     const err = await flaskRes.json();
