@@ -54,7 +54,7 @@ export async function updateSession(request: NextRequest) {
   // If user is authenticated and trying to access the login page, redirect to home
   if (user && request.nextUrl.pathname === "/auth/login") {
     const url = request.nextUrl.clone();
-    url.pathname = "/"; // Redirect to home page if already logged in
+    url.pathname = "/user/dashboard"; // Redirect to home page if already logged in
     return NextResponse.redirect(url);
   }
 
