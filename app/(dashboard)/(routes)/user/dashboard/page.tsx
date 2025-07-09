@@ -20,7 +20,10 @@ export default async function UserDashboardPage() {
   }
 
   // Ambil daftar lowongan yang tersedia untuk dilamar
-  const { data: lowongan, error } = await supabase.from("lowongan").select("*"); // Ambil semua lowongan yang tersedia
+  const { data: lowongan, error } = await supabase
+    .from("lowongan")
+    .select("*")
+    .limit(5); // Ambil semua lowongan yang tersedia
 
   if (error || !lowongan) {
     console.error("Error fetching lowongan:", error?.message);

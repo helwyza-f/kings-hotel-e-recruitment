@@ -6,6 +6,17 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface LamaranFormProps {
   lowongan: any;
@@ -139,13 +150,35 @@ export default function LamaranForm({ lowongan, userId }: LamaranFormProps) {
           <p className="text-green-600 text-sm">
             ✅ Lamaran Anda telah berhasil dikirim.
           </p>
+
           <div className="flex gap-3 flex-wrap">
-            <Button
-              variant="outline"
-              onClick={() => router.push(`/user/lowongan/${lowongan.id}/exam`)}
-            >
-              Lanjut ke Exam
-            </Button>
+            {/* AlertDialog untuk konfirmasi ujian */}
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline">Lanjut ke Exam</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Mulai Ujian Sekarang?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Setelah Anda masuk ke halaman ujian, timer akan langsung
+                    berjalan dan tidak bisa dijeda. Pastikan Anda sudah siap.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Batal</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() =>
+                      router.push(`/user/lowongan/${lowongan.id}/exam`)
+                    }
+                  >
+                    Mulai Sekarang
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+
+            {/* Tombol Lihat Lamaran */}
             <Button onClick={() => router.push("/user/profile/lamaran-saya")}>
               Lihat Lamaran Saya
             </Button>

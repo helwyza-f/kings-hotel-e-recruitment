@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { set } from "date-fns";
 
 interface ExamQuestion {
   id: string;
@@ -17,6 +16,7 @@ interface ExamData {
   title: string;
   description: string;
   lowongan_id: string;
+  duration_minutes: number;
 }
 
 interface ExamClientPageProps {
@@ -33,9 +33,83 @@ export default function ExamClientPage({
   const router = useRouter();
   const [answers, setAnswers] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0); // seconds
+  const [timerExpired, setTimerExpired] = useState(false);
+
+  const examKey = `exam-start-${exam.id}`;
+
+  // Format time: MM:SS
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60)
+      .toString()
+      .padStart(2, "0");
+    const s = (seconds % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  };
+
+  useEffect(() => {
+    // Hitung waktu sisa dari localStorage
+    const storedStart = localStorage.getItem(examKey);
+    let startTime: number;
+
+    if (storedStart) {
+      startTime = parseInt(storedStart, 10);
+    } else {
+      // Simpan waktu sekarang sebagai waktu mulai
+      startTime = Date.now();
+      localStorage.setItem(examKey, startTime.toString());
+    }
+
+    const totalTime = exam.duration_minutes * 60; // seconds
+
+    const updateTimer = () => {
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const remaining = totalTime - elapsed;
+
+      if (remaining <= 0) {
+        setTimerExpired(true);
+        handleSubmitAuto();
+        clearInterval(interval);
+      } else {
+        setTimeLeft(remaining);
+      }
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleChange = (questionId: string, value: string) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
+  };
+
+  const handleSubmitAuto = async () => {
+    setLoading(true);
+    toast.info("Waktu habis. Jawaban dikirim otomatis.");
+    try {
+      const res = await fetch("/api/submit-exam", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          answers,
+          examId: exam.id,
+          userId,
+          lowonganId: exam.lowongan_id,
+        }),
+      });
+
+      if (res.ok) {
+        localStorage.removeItem(examKey);
+        router.push("/user/profile/lamaran-saya");
+      } else {
+        toast.error("Gagal mengirim otomatis.");
+      }
+    } catch {
+      toast.error("Terjadi kesalahan saat auto-submit.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,37 +131,29 @@ export default function ExamClientPage({
       const result = await res.json();
 
       if (res.ok) {
-        setLoading(false);
         toast.success("Ujian berhasil dikirim!");
+        localStorage.removeItem(examKey);
         router.push("/user/profile/lamaran-saya");
       } else {
-        if (result.error?.includes("pendidikan")) {
-          setLoading(false);
-          toast.error(
-            "Anda belum mengisi data pendidikan. Silakan lengkapi dulu."
-          );
-        } else if (result.error?.includes("pengalaman kerja")) {
-          setLoading(false);
-          toast.error(
-            "Anda belum mengisi data pengalaman kerja. Silakan lengkapi dulu."
-          );
-        } else {
-          setLoading(false);
-          toast.error("Gagal memeriksa jawaban.");
-        }
-        console.error(result.error);
+        toast.error(result.error || "Gagal memeriksa jawaban.");
       }
     } catch (error) {
-      console.error("Error submitting exam:", error);
       toast.error("Terjadi kesalahan saat mengirim.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold">{exam.title}</h2>
-        <p className="text-sm text-muted-foreground">{exam.description}</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold">{exam.title}</h2>
+          <p className="text-sm text-muted-foreground">{exam.description}</p>
+        </div>
+        <div className="text-red-600 font-bold text-lg">
+          Sisa waktu: {formatTime(timeLeft)}
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -108,6 +174,7 @@ export default function ExamClientPage({
                       checked={answers[q.id] === choice}
                       onChange={() => handleChange(q.id, choice)}
                       required
+                      disabled={loading || timerExpired}
                     />
                     <span>{choice}</span>
                   </label>
@@ -117,7 +184,11 @@ export default function ExamClientPage({
           );
         })}
 
-        <Button type="submit" className="mt-4" disabled={loading}>
+        <Button
+          type="submit"
+          className="mt-4"
+          disabled={loading || timerExpired}
+        >
           {loading ? "Memeriksa..." : "Submit Jawaban"}
         </Button>
       </form>

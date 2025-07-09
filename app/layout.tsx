@@ -4,10 +4,6 @@ import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
-const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
-
 export const metadata: Metadata = {
   metadataBase: new URL("https://recruitment.kingshotelbatam.com"),
   title: "Recruitment Portal – King's Hotel Batam",

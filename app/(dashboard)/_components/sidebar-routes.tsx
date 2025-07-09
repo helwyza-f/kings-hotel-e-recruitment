@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Home, LayoutDashboard, List, User, User2 } from "lucide-react";
+import { Home, LayoutDashboard, List, User } from "lucide-react";
 import SidebarRouteItems from "./sidebar-route-items";
 
 const adminRoutes = [
