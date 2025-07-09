@@ -23,5 +23,13 @@ export default async function PengalamanPage() {
     );
   }
 
-  return <PengalamanList pengalaman={pengalaman} />;
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-bold">Riwayat Pendidikan</h1>
+      </div>
+
+      <PengalamanList pengalaman={pengalaman} />
+    </div>
+  );
 }
