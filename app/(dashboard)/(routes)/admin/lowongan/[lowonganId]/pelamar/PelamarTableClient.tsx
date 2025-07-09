@@ -66,9 +66,17 @@ export default function PelamarCardList({ pelamars }: { pelamars: Pelamar[] }) {
             className="rounded-lg border bg-card shadow-sm p-4 flex flex-col justify-between"
           >
             <div>
-              <h3 className="text-lg font-semibold">
+              <a
+                href={`https://pddikti.kemdiktisaintek.go.id/search/mahasiswa/${encodeURIComponent(
+                  `${p.user.first_name} ${p.user.last_name}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-lg font-semibold text-blue-600 hover:underline"
+              >
                 {p.user.first_name} {p.user.last_name}
-              </h3>
+              </a>
+
               <p className="text-sm text-muted-foreground">{p.user.email}</p>
 
               <div className="mt-2 flex items-center gap-2 text-sm">

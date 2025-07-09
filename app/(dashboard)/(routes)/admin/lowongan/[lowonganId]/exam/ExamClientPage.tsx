@@ -1,102 +1,168 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+
 import { useEffect, useState } from "react";
-import { SquarePen, Trash } from "lucide-react"; // Import the icons from Lucide React
-import { createClient } from "@/lib/supabase/client"; // Import Supabase client
-import { toast } from "sonner"; // For toast notifications
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Pencil, SquarePen, Trash } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 
 export default function ExamClientPage({
-  exams,
-  examQuestions,
   lowonganId,
+  exam,
+  examQuestions,
 }: {
-  exams: any[];
-  examQuestions: any[];
   lowonganId: string;
+  exam: {
+    id: string;
+    duration_minutes: number;
+    title: string;
+    description?: string;
+  };
+  examQuestions: any[];
 }) {
   const [questions, setQuestions] = useState<any[]>([]);
-  console.log(exams);
-  useEffect(() => {
-    // Convert the jsonb `choices` into a proper array and set it to state
-    const updatedQuestions = examQuestions.map((question) => {
-      // Ensure choices is parsed correctly if it's a JSON string
-      const choices = Array.isArray(question.choices)
-        ? question.choices // If it's already an array, use it directly
-        : question.choices
-        ? JSON.parse(question.choices) // Parse the JSON string if it's not an array
-        : []; // If choices is empty or undefined, set an empty array
+  const [duration, setDuration] = useState<number>(exam.duration_minutes);
+  const [isEditTimer, setIsEditTimer] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-      return { ...question, choices }; // Update the question with parsed choices
-    });
-    setQuestions(updatedQuestions);
+  useEffect(() => {
+    const updated = examQuestions.map((q) => ({
+      ...q,
+      choices: Array.isArray(q.choices)
+        ? q.choices
+        : q.choices
+        ? JSON.parse(q.choices)
+        : [],
+    }));
+    setQuestions(updated);
   }, [examQuestions]);
 
-  // Function to handle delete request
   const handleDeleteQuestion = async (questionId: string) => {
     const supabase = createClient();
-
-    // Send the delete request to Supabase
     const { error } = await supabase
       .from("exam_questions")
       .delete()
-      .eq("id", questionId); // Delete the question based on the provided questionId
+      .eq("id", questionId);
 
     if (error) {
-      console.error("Error deleting question:", error.message);
+      toast.error("Gagal menghapus soal.");
     } else {
       toast.success("Soal berhasil dihapus!");
-      // Optionally, you can also filter out the deleted question from the UI immediately
-      setQuestions((prevQuestions) =>
-        prevQuestions.filter((question) => question.id !== questionId)
-      );
+      setQuestions((prev) => prev.filter((q) => q.id !== questionId));
     }
   };
 
+  const handleUpdateDuration = async () => {
+    if (duration < 1 || duration > 180) {
+      toast.warning("Durasi harus antara 1 hingga 180 menit.");
+      return;
+    }
+
+    setLoading(true);
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("exams")
+      .update({ duration_minutes: duration })
+      .eq("id", exam.id);
+
+    if (error) {
+      toast.error("Gagal memperbarui durasi.");
+    } else {
+      toast.success("Durasi berhasil diperbarui.");
+      setIsEditTimer(false);
+    }
+
+    setLoading(false);
+  };
+
   return (
-    <div className="space-y-4">
-      {/* Add New Question Button */}
-      <div className="mt-6 pb-2 border-b">
+    <div className="space-y-6">
+      {/* Informasi Ujian */}
+      <div className="border rounded-lg p-4 space-y-3 bg-muted/20">
+        <div className="flex justify-between items-start">
+          <div>
+            <h2 className="font-semibold text-lg">{exam.title}</h2>
+            <p className="text-sm text-muted-foreground">{exam.description}</p>
+          </div>
+        </div>
+
+        {/* Durasi */}
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-medium">Durasi Ujian:</span>
+
+          {isEditTimer ? (
+            <>
+              <Input
+                type="number"
+                className="w-24"
+                value={duration}
+                onChange={(e) => setDuration(parseInt(e.target.value))}
+                min={1}
+                max={180}
+              />
+              <span className="text-sm">menit</span>
+              <Button
+                size="sm"
+                onClick={handleUpdateDuration}
+                disabled={loading}
+              >
+                Simpan Durasi
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setIsEditTimer(false)}
+                disabled={loading}
+              >
+                Batal
+              </Button>
+            </>
+          ) : (
+            <>
+              <span className="font-medium">{duration} menit</span>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => setIsEditTimer(true)}
+                className="text-muted-foreground"
+                title="Edit Durasi"
+              >
+                <Pencil size={16} />
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Tambah Soal */}
+      <div className="flex justify-between items-center border-b pb-2">
         <Link href={`/admin/lowongan/${lowonganId}/exam/create`}>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="bg-primary text-background hover:bg-button-hover"
-          >
+          <Button className="bg-primary text-background hover:bg-button-hover">
             Add New Question
           </Button>
         </Link>
       </div>
-      {questions.map((question) => (
-        <div key={question.id} className="border-b py-4">
-          <h3 className="font-medium text-foreground">
-            {question.question_text}
-          </h3>
-          <p className="text-sm dark:text-primary text-foreground mt-1">
-            Pilihan:{" "}
-            {Array.isArray(question.choices)
-              ? question.choices.join(", ")
-              : "No choices available"}
+
+      {/* Daftar Soal */}
+      {questions.map((q) => (
+        <div key={q.id} className="border-b py-4">
+          <h3 className="font-medium">{q.question_text}</h3>
+          <p className="text-sm text-muted-foreground mt-1">
+            Pilihan: {q.choices.join(", ")}
           </p>
           <div className="mt-2 flex gap-2">
-            {/* Edit Button */}
-            <Link href={`/admin/lowongan/${lowonganId}/exam/${question.id}`}>
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-foreground text-foreground hover:bg-background"
-              >
+            <Link href={`/admin/lowongan/${lowonganId}/exam/${q.id}`}>
+              <Button size="sm" variant="outline">
                 <SquarePen size={16} className="mr-1" />
-                Edit Question
+                Edit
               </Button>
             </Link>
-
-            {/* Delete Button with Trash Icon */}
             <Button
-              variant="destructive"
               size="sm"
-              onClick={() => handleDeleteQuestion(question.id)}
-              className="flex items-center justify-center bg-destructive dark:bg-primary text-background"
+              variant="destructive"
+              onClick={() => handleDeleteQuestion(q.id)}
             >
               <Trash size={16} />
             </Button>

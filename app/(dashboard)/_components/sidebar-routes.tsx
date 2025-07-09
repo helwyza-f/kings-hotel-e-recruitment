@@ -7,7 +7,7 @@ import SidebarRouteItems from "./sidebar-route-items";
 const adminRoutes = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/admin/dashboard" },
   { icon: List, label: "Lowongan", href: "/admin/lowongan" },
-  { icon: User2, label: "Pelamar", href: "/admin/pelamar" },
+  // { icon: User2, label: "Pelamar", href: "/admin/pelamar" },
 ];
 
 const guestRoutes = [

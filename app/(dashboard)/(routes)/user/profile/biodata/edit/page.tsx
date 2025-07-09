@@ -12,6 +12,6 @@ export default async function EditProfilePage() {
     .select("*")
     .eq("id", user?.id)
     .single();
-
+  if (!profile) return null;
   return <UserProfileClientPage profile={profile} />;
 }

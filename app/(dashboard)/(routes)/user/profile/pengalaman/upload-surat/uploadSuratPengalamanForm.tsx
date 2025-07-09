@@ -19,7 +19,7 @@ export default function UploadSuratPengalamanForm() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState<PengalamanAI | null>(null);
-
+  const [loadingSimpan, setLoadingSimpan] = useState(false);
   const router = useRouter();
 
   const handleUpload = async () => {
@@ -55,7 +55,7 @@ export default function UploadSuratPengalamanForm() {
 
   const handleSimpan = async () => {
     if (!preview) return;
-    setLoading(true);
+    setLoadingSimpan(true);
     const supabase = createClient();
     const { data: userData } = await supabase.auth.getUser();
     const user_id = userData.user?.id;
@@ -75,7 +75,7 @@ export default function UploadSuratPengalamanForm() {
       console.error(error);
       toast.error("Gagal menyimpan ke database.");
     } else {
-      setLoading(false);
+      setLoadingSimpan(false);
       toast.success("Data pengalaman berhasil disimpan!");
       router.push("/user/profile/pengalaman");
     }
@@ -109,7 +109,9 @@ export default function UploadSuratPengalamanForm() {
             <p>
               <strong>Periode:</strong> {preview.periode}
             </p>
-            <Button onClick={handleSimpan}>Simpan ke Database</Button>
+            <Button onClick={handleSimpan} disabled={loadingSimpan}>
+              Simpan ke Database
+            </Button>
           </CardContent>
         </Card>
       )}

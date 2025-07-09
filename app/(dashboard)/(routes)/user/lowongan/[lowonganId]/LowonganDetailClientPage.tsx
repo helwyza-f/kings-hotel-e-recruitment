@@ -21,11 +21,13 @@ interface Lowongan {
 interface LowonganDetailClientPageProps {
   lowongan: Lowongan;
   sudahMelamar: boolean;
+  bolehMelamar: boolean; // Optional prop to indicate if the user can apply
 }
 
 export default function LowonganDetailClientPage({
   lowongan,
   sudahMelamar,
+  bolehMelamar, // Optional prop to indicate if the user can apply
 }: LowonganDetailClientPageProps) {
   return (
     <div>
@@ -47,11 +49,20 @@ export default function LowonganDetailClientPage({
       </div>
 
       {!sudahMelamar ? (
-        <Link href={`/user/lowongan/${lowongan.id}/lamaran`} className="mt-4">
-          <Button variant="default" size="sm">
-            Lamar Sekarang
-          </Button>
-        </Link>
+        <div className="mt-4 space-y-2">
+          {!bolehMelamar ? (
+            <p className="text-sm text-red-500">
+              ⚠️ Silakan lengkapi data pendidikan dan pengalaman kerja Anda di
+              halaman profil sebelum melamar.
+            </p>
+          ) : (
+            <Link href={`/user/lowongan/${lowongan.id}/lamaran`}>
+              <Button variant="default" size="sm" disabled={!bolehMelamar}>
+                Lamar Sekarang
+              </Button>
+            </Link>
+          )}
+        </div>
       ) : (
         <p className="mt-4 text-sm text-muted-foreground">
           ✅ Anda sudah melamar ke lowongan ini.

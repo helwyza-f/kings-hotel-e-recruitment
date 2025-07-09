@@ -22,7 +22,7 @@ export default function UploadIjazahForm() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState<PendidikanAI | null>(null);
-
+  const [loadingSimpan, setLoadingSimpan] = useState(false);
   const router = useRouter();
 
   const handleUpload = async () => {
@@ -53,7 +53,7 @@ export default function UploadIjazahForm() {
 
   const handleSimpan = async () => {
     if (!preview) return;
-    setLoading(true);
+    setLoadingSimpan(true);
     const supabase = createClient();
     const { data: userData } = await supabase.auth.getUser();
     const user_id = userData.user?.id;
@@ -75,7 +75,7 @@ export default function UploadIjazahForm() {
       console.error(error);
       toast.error("Gagal menyimpan ke database.");
     } else {
-      setLoading(false);
+      setLoadingSimpan(false);
       toast.success("Data berhasil disimpan!");
       router.push("/user/profile/pendidikan");
     }
@@ -112,7 +112,9 @@ export default function UploadIjazahForm() {
             <p>
               <strong>Periode:</strong> {preview.periode}
             </p>
-            <Button onClick={handleSimpan}>Simpan ke Database</Button>
+            <Button onClick={handleSimpan} disabled={loadingSimpan}>
+              Simpan ke Database
+            </Button>
           </CardContent>
         </Card>
       )}

@@ -104,12 +104,7 @@ export default async function LamaranSayaPage() {
                   </span>
                 </p>
 
-                {lamaran.exam_score !== null ? (
-                  <div className="text-sm space-y-1">
-                    <p>Skor Ujian: {lamaran.exam_score}</p>
-                    <p>Kategori: {lamaran.exam_category}</p>
-                  </div>
-                ) : (
+                {lamaran.exam_score === null && (
                   <Link href={`/user/lowongan/${lamaran.lowongan.id}/exam`}>
                     <Button
                       variant="default"
