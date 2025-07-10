@@ -52,9 +52,9 @@ export async function updateSession(request: NextRequest) {
   }
 
   // 🔁 Jika sudah login tapi akses /auth/login, arahkan ke dashboard
-  if (user && pathname === "/auth/login") {
+  if (user && pathname.startsWith("/auth")) {
     const dashboardUrl = request.nextUrl.clone();
-    dashboardUrl.pathname = "/user/dashboard";
+    dashboardUrl.pathname = "/"; // atau halaman dashboard yang sesuai
     return NextResponse.redirect(dashboardUrl);
   }
 

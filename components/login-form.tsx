@@ -55,9 +55,12 @@ export function LoginForm({
       }
 
       if (profile.role === "admin") {
-        router.push("/admin");
+        router.push("/admin/dashboard");
+      }
+      if (profile.role === "user") {
+        router.push("/user/profile/biodata");
       } else {
-        router.push("/user/profile");
+        throw new Error("Role tidak dikenali");
       }
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "Terjadi kesalahan");
