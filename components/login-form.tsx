@@ -59,8 +59,6 @@ export function LoginForm({
       }
       if (profile.role === "user") {
         router.push("/user/profile/biodata");
-      } else {
-        throw new Error("Role tidak dikenali");
       }
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "Terjadi kesalahan");
