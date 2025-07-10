@@ -4,6 +4,8 @@
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { Pencil } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { UserIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,6 +20,7 @@ interface UserProfileViewPageProps {
     jenis_kelamin: string | null;
     tanggal_lahir: string | null;
     tempat_lahir: string | null;
+    foto_url: string | null;
   };
 }
 
@@ -28,6 +31,16 @@ export default function UserProfileViewPage({
 
   return (
     <div className="w-full">
+      <Avatar className="w-24 h-24 mx-auto mb-6">
+        {profile.foto_url ? (
+          <AvatarImage src={profile.foto_url} />
+        ) : (
+          <AvatarFallback>
+            <UserIcon className="w-8 h-8" />
+          </AvatarFallback>
+        )}
+      </Avatar>
+
       <Card className="w-full shadow-sm rounded-xl">
         <CardHeader className="flex flex-row items-center justify-between border-b">
           <CardTitle className="text-xl font-semibold">Profil Saya</CardTitle>
