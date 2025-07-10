@@ -33,6 +33,10 @@ export async function updateSession(request: NextRequest) {
     pathname === "/" || // root
     pathname.startsWith("/_next") || // nextjs assets
     pathname.startsWith("/images") ||
+    pathname.startsWith("/public") || // public folder
+    pathname.startsWith("/auth") || // auth routes
+    pathname.startsWith("/api") || // API routes
+    pathname.startsWith("/static") || // static files
     pathname === "/favicon.ico" ||
     pathname.match(/\.(svg|png|jpg|jpeg|gif|webp)$/);
 
