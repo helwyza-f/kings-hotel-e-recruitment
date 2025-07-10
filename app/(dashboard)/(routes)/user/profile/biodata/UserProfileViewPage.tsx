@@ -30,10 +30,11 @@ export default function UserProfileViewPage({
   const router = useRouter();
 
   return (
-    <div className="w-full">
-      <Avatar className="w-24 h-24 mx-auto mb-6">
+    <div className="w-full flex flex-col items-center">
+      {/* Avatar */}
+      <Avatar className="w-24 h-24 mb-4 ring-2 ring-primary">
         {profile.foto_url ? (
-          <AvatarImage src={profile.foto_url} />
+          <AvatarImage src={profile.foto_url} alt="Foto Profil" />
         ) : (
           <AvatarFallback>
             <UserIcon className="w-8 h-8" />
@@ -41,6 +42,17 @@ export default function UserProfileViewPage({
         )}
       </Avatar>
 
+      {/* Tombol edit foto */}
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => router.push("/user/profile/foto-profil")}
+        className="mb-6"
+      >
+        Edit Foto Profil
+      </Button>
+
+      {/* Kartu Biodata */}
       <Card className="w-full shadow-sm rounded-xl">
         <CardHeader className="flex flex-row items-center justify-between border-b">
           <CardTitle className="text-xl font-semibold">Profil Saya</CardTitle>
