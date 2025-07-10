@@ -38,10 +38,29 @@ export function LoginForm({
         password,
       });
       if (error) throw error;
-      // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push("/user/profile");
+
+      // ✅ Setelah login, ambil user dan cek rolenya
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user?.id)
+        .single();
+
+      if (profileError || !profile) {
+        throw new Error("Gagal mengambil data profil");
+      }
+
+      if (profile.role === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/user/profile");
+      }
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
+      setError(error instanceof Error ? error.message : "Terjadi kesalahan");
     } finally {
       setIsLoading(false);
     }
