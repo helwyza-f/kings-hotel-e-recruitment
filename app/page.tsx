@@ -11,8 +11,8 @@ export default async function RootPage() {
   const { data: lowongans } = await supabaseAdmin
     .from("lowongan")
     .select("*")
-    .order("created_at", { ascending: false })
-    .limit(5);
+    .order("created_at", { ascending: true });
+  // .limit(5);
 
   return (
     <div className="w-full min-h-screen">
