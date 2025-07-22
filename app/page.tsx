@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import supabaseAdmin from "@/lib/supabase/admin";
 import { GraduationCap, Clock, FileText } from "lucide-react";
-
+export const dynamic = "force-dynamic";
 export default async function RootPage() {
   const { data: lowongans } = await supabaseAdmin
     .from("lowongan")
