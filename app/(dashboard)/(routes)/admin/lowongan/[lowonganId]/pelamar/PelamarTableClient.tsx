@@ -10,6 +10,7 @@ import {
   MailOpen,
   GraduationCap,
   Briefcase,
+  SquareArrowOutUpRight,
 } from "lucide-react";
 import {
   Tooltip,
@@ -17,6 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import Link from "next/link";
 
 interface Pelamar {
   id: string;
@@ -75,6 +77,7 @@ export default function PelamarCardList({ pelamars }: { pelamars: Pelamar[] }) {
                 className="text-lg font-semibold text-blue-600 hover:underline"
               >
                 {p.user.first_name} {p.user.last_name}
+                <SquareArrowOutUpRight className="inline-block ml-1 w-4 h-4" />
               </a>
 
               <p className="text-sm text-muted-foreground">{p.user.email}</p>
@@ -99,65 +102,74 @@ export default function PelamarCardList({ pelamars }: { pelamars: Pelamar[] }) {
               </div>
             </div>
 
-            <div className="mt-4 flex items-center justify-between">
-              <div className="flex gap-3">
-                {p.cv_url && (
+            <div className="mt-4 flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <div className="flex gap-3">
+                  {p.cv_url && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <a
+                          href={`${supabaseUrl}/storage/v1/object/public/${p.cv_url}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <FileText className="w-5 h-5 text-blue-600 hover:text-blue-800" />
+                        </a>
+                      </TooltipTrigger>
+                      <TooltipContent>CV</TooltipContent>
+                    </Tooltip>
+                  )}
+                  {p.surat_lamaran_url && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <a
+                          href={`${supabaseUrl}/storage/v1/object/public/${p.surat_lamaran_url}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <MailOpen className="w-5 h-5 text-green-600 hover:text-green-800" />
+                        </a>
+                      </TooltipTrigger>
+                      <TooltipContent>Surat Lamaran</TooltipContent>
+                    </Tooltip>
+                  )}
+                </div>
+
+                <div className="flex gap-2">
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <a
-                        href={`${supabaseUrl}/storage/v1/object/public/${p.cv_url}`}
-                        target="_blank"
-                        rel="noreferrer"
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        onClick={() => handleUpdateStatus(p.id, "Direview")}
                       >
-                        <FileText className="w-5 h-5 text-blue-600 hover:text-blue-800" />
-                      </a>
+                        <Check className="w-4 h-4" />
+                      </Button>
                     </TooltipTrigger>
-                    <TooltipContent>CV</TooltipContent>
+                    <TooltipContent>Tandai Direview</TooltipContent>
                   </Tooltip>
-                )}
-                {p.surat_lamaran_url && (
+
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <a
-                        href={`${supabaseUrl}/storage/v1/object/public/${p.surat_lamaran_url}`}
-                        target="_blank"
-                        rel="noreferrer"
+                      <Button
+                        size="icon"
+                        variant="destructive"
+                        onClick={() => handleUpdateStatus(p.id, "Ditolak")}
                       >
-                        <MailOpen className="w-5 h-5 text-green-600 hover:text-green-800" />
-                      </a>
+                        <X className="w-4 h-4" />
+                      </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Surat Lamaran</TooltipContent>
+                    <TooltipContent>Tolak</TooltipContent>
                   </Tooltip>
-                )}
+                </div>
               </div>
 
-              <div className="flex gap-2">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      onClick={() => handleUpdateStatus(p.id, "Direview")}
-                    >
-                      <Check className="w-4 h-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Tandai Direview</TooltipContent>
-                </Tooltip>
-
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      size="icon"
-                      variant="destructive"
-                      onClick={() => handleUpdateStatus(p.id, "Ditolak")}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Tolak</TooltipContent>
-                </Tooltip>
-              </div>
+              <Link
+                href={`/admin/pelamar/${p.user.id}`}
+                className="text-sm text-blue-600 hover:underline self-end"
+              >
+                Lihat Profil
+              </Link>
             </div>
           </div>
         ))}

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import supabaseAdmin from "@/lib/supabase/admin";
-import { GraduationCap, Clock, FileText } from "lucide-react";
+import { GraduationCap, Clock, FileText, ArrowBigDown } from "lucide-react";
 export const dynamic = "force-dynamic";
 export default async function RootPage() {
   const { data: lowongans } = await supabaseAdmin
@@ -34,9 +34,9 @@ export default async function RootPage() {
             <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6 drop-shadow-xl">
               Selamat Datang di King&apos;s Recruitment
             </h1>
-            <p className="text-lg md:text-xl mb-8 drop-shadow">
-              Aplikasi modern untuk membangun profil akademik dan pengalaman
-              kerja Anda.
+            <p className="text-lg font-medium md:text-xl mb-8 drop-shadow">
+              To become a leading hotel that offers comfort, elegance, and
+              exceptional service an icon of hospitality in Batam and beyond.
             </p>
             <Link href="/user/profile">
               <Button
@@ -59,6 +59,20 @@ export default async function RootPage() {
               className="object-cover z-20 w-full h-full rounded-full "
               priority
             />
+          </div>
+          {/* Tombol Lihat Lowongan di bawah konten hero */}
+          <div className="w-full flex justify-center mt-8 lg:absolute lg:bottom-10 lg:left-0 lg:right-0">
+            <Link href="#lowongan-terbaru">
+              <Button
+                variant="outline"
+                size="lg"
+                className="text-lg font-medium text-foreground hover:bg-primary hover:text-primary-foreground "
+              >
+                Lihat Lowongan
+                <br />
+                <ArrowBigDown className="w-20 h-20" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -85,7 +99,7 @@ export default async function RootPage() {
       </section>
 
       {/* Lowongan Terbaru */}
-      <section className="w-full py-12 px-6 bg-white">
+      <section className="w-full py-12 px-6 bg-white" id="lowongan-terbaru">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-semibold mb-6 text-center text-gray-800">
             Lowongan Terbaru
